@@ -12,6 +12,8 @@ public class SimpleWeightedLoadBalancer implements ILoadBalancer {
 
     private final ThreadLocal<Random> randomThreadLocal = ThreadLocal.withInitial(Random::new);
 
+//    private final Random random = new Random();
+
     public SimpleWeightedLoadBalancer(List<WeightedServer> servers) {
         for (WeightedServer server : servers) {
             Target target = new Target();
