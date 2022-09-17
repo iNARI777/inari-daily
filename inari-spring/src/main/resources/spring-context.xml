@@ -11,11 +11,5 @@
         <property name="weight" value="1"/>
     </bean>
 
-    <bean id="loopA" class="work.inari.daily.spring.bean.LoopA">
-        <property name="loopB" ref="loopB"/>
-    </bean>
-
-    <bean id="loopB" class="work.inari.daily.spring.bean.LoopB">
-        <property name="loopA" ref="loopA"/>
-    </bean>
+    <bean id="xmlDefinedBean" class="work.inari.daily.spring.bean.XmlDefinedBean"/>
 </beans>

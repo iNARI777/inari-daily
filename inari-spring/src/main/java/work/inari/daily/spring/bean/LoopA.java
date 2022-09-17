@@ -1,5 +1,8 @@
 package work.inari.daily.spring.bean;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class LoopA {
     private LoopB loopB;
 

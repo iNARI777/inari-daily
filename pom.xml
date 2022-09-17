@@ -11,6 +11,7 @@
     <modules>
         <module>inari-spring</module>
         <module>inari-lab</module>
+        <module>inari-algorithm</module>
     </modules>
 
     <properties>
