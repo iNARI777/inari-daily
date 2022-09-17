@@ -1,13 +1,26 @@
 package work.inarigo.lab.lb;
 
+import org.openjdk.jmh.annotations.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+@BenchmarkMode(Mode.Throughput)
+@Warmup(iterations = 3, time = 1)
+@Measurement(iterations = 5, time = 5)
+@Threads(4)
+@Fork(1)
+@State(value = Scope.Benchmark)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class RouterPlayGround {
 
-    public static void main(String[] args) {
+    private SimpleWeightedLoadBalancer randomLbr;
+    private NginxLoadBalancer roundRobinLbr;
+
+    public RouterPlayGround() {
         List<WeightedServer> servers = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             WeightedServer server = new WeightedServer();
@@ -15,21 +28,17 @@ public class RouterPlayGround {
             server.setWeight(10 * (i + 1));
             servers.add(server);
         }
+        randomLbr = new SimpleWeightedLoadBalancer(servers);
+        roundRobinLbr = new NginxLoadBalancer(servers);
+    }
 
-        Map<String, Integer> statistics = new HashMap<>();
+    @Benchmark
+    public String selectRandom() {
+        return randomLbr.select();
+    }
 
-        ILoadBalancer lb = new SimpleWeightedLoadBalancer(servers);
-//        ILoadBalancer lb = new NginxLoadBalancer(servers);
-
-        for (int i = 0; i < 10000; i++) {
-            String target = lb.select();
-            Integer count = statistics.getOrDefault(target, 0);
-            statistics.put(target, ++count);
-        }
-
-        for (Map.Entry<String, Integer> entry : statistics.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
-
+    @Benchmark
+    public String selectRoundRobin() {
+        return roundRobinLbr.select();
     }
 }
